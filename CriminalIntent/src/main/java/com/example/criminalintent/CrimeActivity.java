@@ -7,11 +7,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.UUID;
+
 public class CrimeActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
-        return new CrimeFragment();
+        UUID crimeId = (UUID)getIntent()
+                .getSerializableExtra(CrimeFragment.EXTRA_CRIME_ID);
+
+        return CrimeFragment.newInstance(crimeId);
     }
 
     @Override
