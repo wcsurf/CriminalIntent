@@ -5,9 +5,7 @@ import android.content.Context;
 import java.util.ArrayList;
 import java.util.UUID;
 
-/**
- * Created by cthomas8484 on 12/26/13.
- */
+
 public class CrimeLab {
 
     private ArrayList<Crime> mCrimes;

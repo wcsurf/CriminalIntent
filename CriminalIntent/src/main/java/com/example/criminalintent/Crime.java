@@ -3,9 +3,7 @@ package com.example.criminalintent;
 import java.util.Date;
 import java.util.UUID;
 
-/**
- * Created by cthomas8484 on 12/26/13.
- */
+
 public class Crime {
 
     private UUID mId;

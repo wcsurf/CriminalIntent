@@ -1,16 +1,16 @@
 package com.example.criminalintent;
 
-import android.app.Activity;
-import android.app.FragmentManager;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-
+import android.support.v4.app.Fragment;
 import java.util.ArrayList;
+import java.util.UUID;
 
 
-public class CrimePagerActivity extends Activity {
+public class CrimePagerActivity extends FragmentActivity {
 
     private ViewPager mViewPager;
     private ArrayList<Crime> mCrimes;
@@ -24,17 +24,44 @@ public class CrimePagerActivity extends Activity {
 
         mCrimes = CrimeLab.get(this).getCrimes();
 
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
             @Override
-            public Fragment getItem(int i) {
-                return null;
+            public Fragment getItem(int pos) {
+                Crime crime = mCrimes.get(pos);
+                return CrimeFragment.newInstance(crime.getId());
             }
 
             @Override
             public int getCount() {
-                return 0;
+                return mCrimes.size();
             }
         });
+
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i2) { }
+
+            @Override
+            public void onPageSelected(int pos) {
+                Crime crime = mCrimes.get(pos);
+
+                if (crime.getTitle() != null) {
+                    setTitle(crime.getTitle());
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) { }
+        });
+
+        UUID crimeId = (UUID)getIntent()
+                .getSerializableExtra(CrimeFragment.EXTRA_CRIME_ID);
+        for (int i = 0; i < mCrimes.size(); i++) {
+            if (mCrimes.get(i).getId().equals(crimeId)) {
+                mViewPager.setCurrentItem(i);
+                break;
+            }
+        }
     }
 }

@@ -13,9 +13,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-/**
- * Created by cthomas8484 on 12/28/13.
- */
+
 public class CrimeListFragment extends ListFragment {
 
     private ArrayList<Crime> mCrimes;
@@ -36,7 +34,7 @@ public class CrimeListFragment extends ListFragment {
         Crime crime = ((CrimeAdapter)getListAdapter()).getItem(position);
 
         // Start CrimeActivity
-        Intent i = new Intent(getActivity(), CrimeActivity.class);
+        Intent i = new Intent(getActivity(), CrimePagerActivity.class);
         i.putExtra(CrimeFragment.EXTRA_CRIME_ID, crime.getId());
         startActivity(i);
     }
