@@ -2,6 +2,7 @@ package com.example.criminalintent;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import java.util.Date;
 import java.util.UUID;
@@ -30,6 +32,7 @@ public class CrimeFragment extends Fragment{
     private EditText mTitleField;
     private Button mDateButton;
     private CheckBox mSolvedCheckBox;
+    private ImageButton mPhotoButton;
     private static final String DIALOG_DATE = "date";
     private static final int REQUEST_DATE = 0;
 
@@ -102,6 +105,22 @@ public class CrimeFragment extends Fragment{
                 mCrime.setSolved(isChecked);
             }
         });
+        mPhotoButton = (ImageButton)v.findViewById(R.id.crime_imageButton);
+        mPhotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), CrimeCameraActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // It there isn't a camera on the device
+        PackageManager pm = getActivity().getPackageManager();
+        boolean hasACamera = pm.hasSystemFeature(PackageManager.FEATURE_CAMERA) ||
+                pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT);
+
+        if (!hasACamera)
+            mPhotoButton.setEnabled(false);
 
         return v;
     }
