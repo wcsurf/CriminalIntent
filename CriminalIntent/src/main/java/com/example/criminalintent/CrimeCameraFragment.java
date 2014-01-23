@@ -70,6 +70,7 @@ public class CrimeCameraFragment extends Fragment {
                 getActivity().setResult(Activity.RESULT_CANCELED);
             }
 
+
             getActivity().finish();
         }
     };

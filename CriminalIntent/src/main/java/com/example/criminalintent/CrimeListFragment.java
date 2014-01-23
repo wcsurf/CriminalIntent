@@ -1,5 +1,6 @@
 package com.example.criminalintent;
 
+import android.app.Activity;
 import android.support.v4.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,6 +25,27 @@ public class CrimeListFragment extends ListFragment {
     private ArrayList<Crime> mCrimes;
     private boolean mSubtitleVisible;
     private static final String TAG = "CrimeListFragment";
+    private Callbacks mCallbacks;
+
+    /**
+     * Required interface for hosting activities
+     */
+    public interface Callbacks {
+
+        void onCrimeSelected(Crime crime);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mCallbacks = (Callbacks)activity;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,9 +130,8 @@ public class CrimeListFragment extends ListFragment {
             case R.id.menu_item_new_crime:
                 Crime crime = new Crime();
                 CrimeLab.get(getActivity()).addCrime(crime);
-                Intent intent = new Intent(getActivity(), CrimePagerActivity.class);
-                intent.putExtra(CrimeFragment.EXTRA_CRIME_ID, crime.getId());
-                startActivityForResult(intent, 0);
+                ((CrimeAdapter)getListAdapter()).notifyDataSetChanged();
+                mCallbacks.onCrimeSelected(crime);
                 return true;
             case R.id.menu_item_show_subtitle:
                 if (getActivity().getActionBar().getSubtitle() == null) {
@@ -132,15 +153,16 @@ public class CrimeListFragment extends ListFragment {
     public void onListItemClick(ListView listView, View view, int position, long id) {
         Crime crime = ((CrimeAdapter)getListAdapter()).getItem(position);
 
-        // Start CrimeActivity
-        Intent i = new Intent(getActivity(), CrimePagerActivity.class);
-        i.putExtra(CrimeFragment.EXTRA_CRIME_ID, crime.getId());
-        startActivity(i);
+        mCallbacks.onCrimeSelected(crime);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        ((CrimeAdapter)getListAdapter()).notifyDataSetChanged();
+    }
+
+    public void updateUI() {
         ((CrimeAdapter)getListAdapter()).notifyDataSetChanged();
     }
 
